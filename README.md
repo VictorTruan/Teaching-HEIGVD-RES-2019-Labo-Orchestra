@@ -109,11 +109,11 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 |Question | Who is going to **send UDP datagrams** and **when**? |
 | |Les musiciens vont envoyer des datagrammes toutes le X secondes.|
 |Question | Who is going to **listen for UDP datagrams** and what should happen when a datagram is received? |
-| | Les auditeurs vont écouter les paquets, ils vont fournir un JSON contenant les données recuent.|
+| | Les auditeurs vont écouter les paquets, ils vont fournir un JSON contenant les données reçues.|
 |Question | What **payload** should we put in the UDP datagrams? |
-| | The instrument, the sound, the uuid and the started time of the musician.|
+| | L'instrument, le son et l'UUID.|
 |Question | What **data structures** do we need in the UDP sender and receiver? When will we update these data structures? When will we query these data structures? |
-| | A list a pair key-values with "uuid", "instrument" and "activeSince" |
+| | Il faudrait une map afin de faire instrument-son et son-instrument mais le JSON envoie les informations donc la structure n'est présente que dans musicien. |
 
 
 ## Task 2: implement a "musician" Node.js application
@@ -123,19 +123,19 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 |Question | In a JavaScript program, if we have an object, how can we **serialize it in JSON**? |
 | |La fonction JSON stringify permet de facilement passer d'un objet à un String JSON. La fonction inverse est JSON.parse|
 |Question | What is **npm**?  |
-| | C'est un gestionnaire de paquet et librairie javascript |
+| | C'est un gestionnaire de paquets et librairie Javascript |
 |Question | What is the `npm install` command and what is the purpose of the `--save` flag?  |
-| | Cela permet d'insaller toutes les dépendances et package  |
+| | Cela permet d'installer toutes les dépendances et package et modifier le package.json  |
 |Question | How can we use the `https://www.npmjs.com/` web site?  |
-| | On peut rechercher quelques mots clef afin de facilement trouver une librairie proposant ce que nous voulons. (Si cela existe biensur) |
+| | On peut rechercher quelques mots-clef afin de facilement trouver une librairie proposant ce que nous voulons. (Si cela existe biensur) |
 |Question | In JavaScript, how can we **generate a UUID** compliant with RFC4122? |
-| | https://www.npmjs.com/package/uuid est une librairie npm permettant de facilement génerer des uuid. |
+| | https://www.npmjs.com/package/uuid est une librairie npm permettant de facilement générer des uuid. |
 |Question | In Node.js, how can we execute a function on a **periodic** basis? |
 | | Nous utilisons set interval.  Source :https://stackoverflow.com/questions/1224463/is-there-any-way-to-call-a-function-periodically-in-javascript |
 |Question | In Node.js, how can we **emit UDP datagrams**? |
-| | Nous pouvons utilisé 'dgram', le fonction createSocket puis send sur la socket |
+| | Nous pouvons utiliser 'dgram', la fonction createSocket puis send sur la socket |
 |Question | In Node.js, how can we **access the command line arguments**? |
-| | NNous pouvons la faire grâce à process.argv[2], comme cela est visible dans le laboratoire Thermometre. |
+| | Nous pouvons la faire grâce à process.argv[2], comme cela est visible dans le laboratoire thermomètre. |
 
 
 ## Task 3: package the "musician" app in a Docker image
@@ -143,17 +143,17 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic |
 | ---  | --- |
 |Question | How do we **define and build our own Docker image**?|
-| | Nous devons écrire un dockerfile qui est basé sur nodejs, aprés cela nous y copions notre programme puis nous lancerons l'application avec le parametre de lancement du docker comme parametre. |
+| | Nous devons écrire un dockerfile qui est basé sur nodejs, après cela nous y copions notre programme puis nous lancerons l'application avec le paramètre de lancement du docker comme paramètre. |
 |Question | How can we use the `ENTRYPOINT` statement in our Dockerfile?  |
 | | ENTRYPOINT est une sorte de CMD mais qui permet de passer des arguments. |
 |Question | After building our Docker image, how do we use it to **run containers**?  |
-| | Nous pouvons ajouter un argument a la run afin de savoir quel musicien va jouer, lors du build nous avons préciser le nom puis nous faisons "docker run res/musician instruement"  |
+| | Nous pouvons ajouter un argument a la commande run afin de savoir quel musicien va jouer, lors du build nous avons précisé le nom puis nous faisons "docker run res/musician instrument"  |
 |Question | How do we get the list of all **running containers**?  |
 | | docker ps  |
 |Question | How do we **stop/kill** one running container?  |
 | | docker kill ID ou name |
 |Question | How can we check that our running containers are effectively sending UDP datagrams?  |
-| | Si nous connectons wireshark sur le réseau docker, nous verrons passer des datagramme UDP.  |
+| | Si nous connectons wireshark sur le réseau docker, nous verrons passer des datagrammes UDP.  |
 
 
 ## Task 4: implement an "auditor" Node.js application
@@ -163,13 +163,13 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 |Question | With Node.js, how can we listen for UDP datagrams in a multicast group? |
 | | Nous pouvons utiliser dgram aussi, la creation de socket puis la fonction on()  |
 |Question | How can we use the `Map` built-in object introduced in ECMAScript 6 to implement a **dictionary**?  |
-| | Il est possible d'utiliser l'objet map avec une paire {UUID,{Info1,Info2, ..., infoX}} puis la méthode SET(uuid) nous permet soit d'inserer la paire pour l'UUID si elle n'est pas présente sinon elle permet de mettre à jourd les valeurs pour l'UUID|
+| | Il est possible d'utiliser l'objet map avec une paire {UUID,{Info1, info2, ..., infoX}} puis la méthode SET(uuid) nous permet soit d'insérer la paire pour l'UUID si elle n'est pas présente sinon elle permet de mettre à jour les valeurs pour l'UUID|
 |Question | How can we use the `Moment.js` npm module to help us with **date manipulations** and formatting?  |
-| | moment permet d'obtenir facilement une date lisible et utilisable pour des calcules. |
+| | moment permet d'obtenir facilement une date lisible et utilisable pour des calculs. |
 |Question | When and how do we **get rid of inactive players**?  |
-| | Lorsqu'un musicien n'a pas jouer depuis 5secondes, l'auditeur elimine ce musicien de sa liste des musiciens actif. La méthode de vérification sera lancée automatiquement. |
+| | Lorsqu'un musicien n'a pas joué depuis 5 secondes, l'auditeur élimine ce musicien de sa liste des musiciens actifs. La méthode de vérification sera lancée automatiquement. |
 |Question | How do I implement a **simple TCP server** in Node.js?  |
-| | Avec le module "net" il est possible de crée un server et client TCP facillement |
+| | Avec le module "net" il est possible de créer un serveur et client TCP facilement |
 
 
 ## Task 5: package the "auditor" app in a Docker image
@@ -177,7 +177,7 @@ When you connect to the TCP interface of the **Auditor**, you should receive an 
 | #  | Topic |
 | ---  | --- |
 |Question | How do we validate that the whole system works, once we have built our Docker image? |
-| | Un script de validation nous peremet de voir si cela fonctionne. Sans ça il faut lancer un auditeur et ce connecter en TCP avec telnet (Un tableau vide doit être reçu)Puis de lancer des containers de musiciens et refaire une connection telnet. (Cette fois nous devrions recevoir un JSON). Puis supprimer un container et voir si c'est bel et bien aprés un moment que le JSON recu en TCP perds des informations.|
+| | Un script de validation nous permet de voir si cela fonctionne. Sans ça il faut lancer un auditeur et se connecter en TCP avec telnet (un tableau vide doit être reçu)Puis de lancer des containers de musiciens et refaire une connexion telnet. (Cette fois nous devrions recevoir un JSON). Puis supprimer un container et voir si c'est bel et bien après un moment que le JSON reçu en TCP perd des informations.|
 
 
 ## Constraints
