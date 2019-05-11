@@ -1,0 +1,17 @@
+{
+  "name": "musique-auditeur",
+  "version": "1.0.0",
+  "description": "auditor for orchestra lab",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Victor Truan",
+  "license": "ISC",
+  "dependencies": {
+    "arraylist": "^0.1.0",
+    "dgram": "^1.0.1",
+    "moment": "^2.24.0",
+    "net": "^1.0.2"
+  }
+}
