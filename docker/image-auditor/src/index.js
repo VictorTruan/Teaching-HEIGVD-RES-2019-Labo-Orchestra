@@ -6,6 +6,12 @@ const ADRESS = "238.255.255.1";
 const PORT = 34641;
 const udpSocket = dgram.createSocket('udp4');
 function auditor(){
+    var instruments = new Map();
+    instruments.set("ti-ta-ti", "piano");
+	instruments.set("pouet", "trumpet");
+	instruments.set("trulu", "flute");
+	instruments.set("gzi-gzi", "violin");
+    instruments.set("boum-boum", "drum");
     var listened = new ArrayList;
     udpSocket.bind(PORT, function(){
         udpSocket.addMembership(ADRESS);
@@ -13,7 +19,7 @@ function auditor(){
     
     udpSocket.on('message', function(msg, source){
         var tmp = JSON.parse(msg);
-        updateTime(tmp.uuid, tmp.instrument);    
+        updateTime(tmp.uuid, instruments.get(tmp.son));    
     });
 
     function updateTime(uuid, instrument){

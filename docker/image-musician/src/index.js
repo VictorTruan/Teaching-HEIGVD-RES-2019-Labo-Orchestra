@@ -13,7 +13,6 @@ function musicien(instrument){
     instruments.set("drum", "boum-boum");
     const udpSocket = dgram.createSocket('udp4');
     var note = {
-        instrument: this.instrument,
         son: instruments.get(this.instrument),
         uuid: uuid()
     };
